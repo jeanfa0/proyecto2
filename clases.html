@@ -3,14 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IronForge Studio | High Performance Gym - Jean Avalos</title>
-    
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
-    
+    <title>IronForge Studio | Disciplinas Elite</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ── PAGE-SPECIFIC OVERRIDES ─────────────────── */
+
+        /* Hero */
+        .classes-hero {
+            min-height: 55vh;
+            background:
+                linear-gradient(to bottom, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.97) 100%),
+                url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1920&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            padding-top: 90px;
+        }
+        .classes-hero .eyebrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.08);
+            border: 1px solid rgba(245,183,84,0.25);
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Discipline Cards — full image style */
+        .disc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+        .disc-card {
+            position: relative;
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            background: var(--card-bg);
+            cursor: pointer;
+        }
+        .disc-card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5) grayscale(15%);
+            transition: transform 0.7s cubic-bezier(.4,0,.2,1), filter 0.5s ease;
+        }
+        .disc-card:hover img {
+            transform: scale(1.08);
+            filter: brightness(0.35) grayscale(0%);
+        }
+        .disc-card-veil {
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(10,10,10,0.96) 0%,
+                rgba(10,10,10,0.35) 50%,
+                transparent 100%
+            );
+            transition: all 0.4s ease;
+        }
+        .disc-card:hover .disc-card-veil {
+            background: linear-gradient(
+                to top,
+                rgba(10,10,10,0.99) 0%,
+                rgba(10,10,10,0.5) 55%,
+                rgba(245,183,84,0.03) 100%
+            );
+        }
+        .disc-card-body {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 28px 26px;
+        }
+        .disc-tag {
+            display: inline-block;
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.1);
+            border: 1px solid rgba(245,183,84,0.2);
+            padding: 4px 10px; border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .disc-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(26px, 3vw, 36px);
+            letter-spacing: 1px;
+            line-height: 1;
+            color: #fff;
+            margin-bottom: 0;
+        }
+        .disc-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-top: 10px;
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+        }
+        .disc-card:hover .disc-desc {
+            max-height: 80px;
+            opacity: 1;
+        }
+        .disc-meta {
+            margin-top: 14px;
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px;
+            opacity: 0; transform: translateY(6px);
+            transition: opacity 0.3s 0.1s ease, transform 0.3s 0.1s ease;
+        }
+        .disc-card:hover .disc-meta { opacity: 1; transform: translateY(0); }
+        .disc-meta i { color: var(--accent-primary); font-size: 9px; }
+        .disc-meta .pipe { color: var(--border-color); }
+
+        /* Info strip */
+        .info-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .info-cell {
+            padding: 40px 36px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            transition: all var(--transition-base);
+        }
+        .info-cell:not(:first-child) { border-left: none; }
+        .info-cell:hover { background: var(--secondary-bg); }
+        .info-cell-icon {
+            width: 46px; height: 46px;
+            background: rgba(245,183,84,0.08);
+            border: 1px solid rgba(245,183,84,0.2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px; color: var(--accent-primary);
+            margin-bottom: 20px;
+        }
+        .info-cell h5 {
+            font-size: 15px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .info-cell p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* Schedule Table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .schedule-table thead tr {
+            background: rgba(245,183,84,0.07);
+            border-bottom: 2px solid var(--accent-primary);
+        }
+        .schedule-table thead th {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--accent-primary);
+            padding: 18px 20px; text-align: center;
+        }
+        .schedule-table thead th:first-child { text-align: left; }
+        .schedule-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition-fast);
+        }
+        .schedule-table tbody tr:last-child { border-bottom: none; }
+        .schedule-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+        .schedule-table tbody td {
+            padding: 15px 20px; text-align: center;
+            font-size: 13.5px; color: var(--text-secondary);
+        }
+        .schedule-table tbody td:first-child {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 18px; letter-spacing: 1px;
+            color: var(--accent-primary);
+            text-align: left;
+        }
+        .class-pill {
+            display: inline-block;
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 5px 13px; border-radius: 40px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+        .class-pill:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.06);
+        }
+        .class-pill.open {
+            border-color: rgba(245,183,84,0.3);
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.07);
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background:
+                radial-gradient(ellipse 70% 80% at 15% 50%, rgba(245,183,84,0.1) 0%, transparent 60%),
+                var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 64px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-banner::before {
+            content: 'FORGE';
+            position: absolute;
+            right: -20px; top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Bebas Neue', cursive;
+            font-size: 180px; letter-spacing: -4px;
+            color: rgba(245,183,84,0.04);
+            pointer-events: none;
+            line-height: 1;
+            user-select: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .disc-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-strip { grid-template-columns: 1fr 1fr; }
+            .info-cell:nth-child(3) { border-top: none; border-left: 1px solid var(--border-color); }
+            .cta-banner { padding: 48px 36px; }
+        }
+        @media (max-width: 640px) {
+            .disc-grid { grid-template-columns: 1fr; }
+            .info-strip { grid-template-columns: 1fr; }
+            .info-cell:not(:first-child) { border-left: 1px solid var(--border-color); border-top: none; }
+            .cta-banner { padding: 40px 24px; }
+            .cta-banner::before { font-size: 90px; }
+        }
+    </style>
 </head>
 <body class="bg-black text-white">
 
@@ -31,7 +274,6 @@
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link px-3" href="index.html">Inicio</a></li>
@@ -39,7 +281,7 @@
                     <li class="nav-item"><a class="nav-link px-3" href="entrenadores.html">Coaches</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="contacto.html">Contacto</a></li>
                     <li class="nav-item ms-lg-4">
-                        <a class="btn btn-accent btn-pill px-4 py-2" href="contacto.html">
+                        <a class="btn btn-accent btn-pill btn-hover-effect px-4 py-2" href="contacto.html">
                             <span>PRUEBA GRATIS</span>
                             <i class="fas fa-arrow-right ms-2"></i>
                         </a>
@@ -49,135 +291,230 @@
         </div>
     </nav>
 
-<header class="py-5 mt-5 bg-dark-custom text-center position-relative overflow-hidden">
-        <div class="hero-overlay"></div>
-        <div class="container py-5 position-relative" style="z-index: 2;">
-            <h1 class="display-3 fw-bold section-title animate-up" data-aos="fade-down">DISCIPLINAS <span class="text-accent glow-text">ELITE</span></h1>
-            <p class="text-white-50 lead animate-up mx-auto" style="max-width: 700px;" data-aos="fade-up">Desde principiantes hasta atletas de alto rendimiento. En IronForge Studio tenemos el programa perfecto para forjar tu nueva versión.</p>
+    <!-- Hero -->
+    <header class="classes-hero">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="eyebrow" data-aos="fade-down">IronForge Studio — Lima, Perú</span>
+                    <h1 class="section-title display-2 fw-bold mb-4" data-aos="fade-up" data-aos-delay="100">
+                        DISCIPLINAS <span class="text-accent glow-text">ELITE</span>
+                    </h1>
+                    <p class="text-white-50 lead mb-0" data-aos="fade-up" data-aos-delay="200" style="max-width:580px; margin: 0 auto;">
+                        Desde principiantes hasta atletas de alto rendimiento. En IronForge tenemos el programa perfecto para forjar tu mejor versión.
+                    </p>
+                </div>
+            </div>
         </div>
     </header>
 
+    <!-- Disciplines Grid -->
     <section class="py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800" class="img-fluid opacity-50" alt="Boxeo">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">SHADOW BOXING</h3>
-                            <p class="text-accent small fw-bold mb-2">Resistencia & Agilidad</p>
-                            <p class="text-white-50 small mb-0">Mejora tus reflejos y capacidad cardiovascular con técnica de combate real.</p>
+        <div class="container-fluid px-0">
+            <div class="disc-grid">
+
+                <div class="disc-card" data-aos="fade-in">
+                    <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&q=80" alt="Shadow Boxing" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Resistencia & Agilidad</span>
+                        <h3 class="disc-title">Shadow Boxing</h3>
+                        <p class="disc-desc">Mejora tus reflejos y capacidad cardiovascular con técnica de combate real.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 60 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-fire"></i> Alta intensidad
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800" class="img-fluid opacity-50" alt="HIIT">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">HIIT INTENSE</h3>
-                            <p class="text-accent small fw-bold mb-2">Quema Calórica Total</p>
-                            <p class="text-white-50 small mb-0">Intervalos de alta intensidad diseñados para maximizar la oxidación de grasa.</p>
+
+                <div class="disc-card" data-aos="fade-in" data-aos-delay="60">
+                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80" alt="HIIT" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Quema Calórica Total</span>
+                        <h3 class="disc-title">HIIT Intense</h3>
+                        <p class="disc-desc">Intervalos de alta intensidad diseñados para maximizar la oxidación de grasa.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 45 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-fire"></i> Extrema
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800" class="img-fluid opacity-50" alt="Power">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">POWERLIFTING</h3>
-                            <p class="text-accent small fw-bold mb-2">Fuerza Bruta</p>
-                            <p class="text-white-50 small mb-0">Domina los levantamientos básicos: Sentadilla, Press de Banca y Peso Muerto.</p>
+
+                <div class="disc-card" data-aos="fade-in" data-aos-delay="120">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" alt="Powerlifting" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Fuerza Bruta</span>
+                        <h3 class="disc-title">Powerlifting</h3>
+                        <p class="disc-desc">Domina los tres levantamientos: Sentadilla, Press de Banca y Peso Muerto.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 75 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-dumbbell"></i> Fuerza máxima
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800" class="img-fluid opacity-50" alt="Yoga">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">IRON YOGA</h3>
-                            <p class="text-accent small fw-bold mb-2">Flexibilidad & Paz</p>
-                            <p class="text-white-50 small mb-0">Recuperación activa y control mental para equilibrar tus entrenamientos pesados.</p>
+
+                <div class="disc-card" data-aos="fade-in" data-aos-delay="60">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80" alt="Iron Yoga" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Flexibilidad & Paz</span>
+                        <h3 class="disc-title">Iron Yoga</h3>
+                        <p class="disc-desc">Recuperación activa y control mental para equilibrar tus entrenamientos pesados.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 60 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-leaf"></i> Baja intensidad
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1534258958216-3850c8e403f8?w=800" class="img-fluid opacity-50" alt="Crossfit">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">CROSS WOD</h3>
-                            <p class="text-accent small fw-bold mb-2">Funcional & Explosivo</p>
-                            <p class="text-white-50 small mb-0">El entrenamiento del día más desafiante. Comunidad y superación constante.</p>
+
+                <div class="disc-card" data-aos="fade-in" data-aos-delay="120">
+                    <img src="https://images.unsplash.com/photo-1534258958216-3850c8e403f8?w=800&q=80" alt="Cross WOD" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Funcional & Explosivo</span>
+                        <h3 class="disc-title">Cross WOD</h3>
+                        <p class="disc-desc">El entrenamiento del día más desafiante. Comunidad y superación constante.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 60 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-bolt"></i> Alta intensidad
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="feature-card position-relative overflow-hidden p-0 border-0 h-100">
-                        <img src="https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?w=800" class="img-fluid opacity-50" alt="Pilates">
-                        <div class="p-4 position-absolute bottom-0 w-100 bg-gradient-dark">
-                            <h3 class="fw-bold mb-1" style="font-family: 'Bebas Neue';">CORE REFORMER</h3>
-                            <p class="text-accent small fw-bold mb-2">Postura & Core</p>
-                            <p class="text-white-50 small mb-0">Fortalece tu zona media y mejora tu estabilidad para prevenir lesiones.</p>
+
+                <div class="disc-card" data-aos="fade-in" data-aos-delay="180">
+                    <img src="https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?w=800&q=80" alt="Core Reformer" loading="lazy">
+                    <div class="disc-card-veil"></div>
+                    <div class="disc-card-body">
+                        <span class="disc-tag">Postura & Core</span>
+                        <h3 class="disc-title">Core Reformer</h3>
+                        <p class="disc-desc">Fortalece tu zona media y mejora la estabilidad para prevenir lesiones.</p>
+                        <div class="disc-meta">
+                            <i class="fas fa-clock"></i> 50 min
+                            <span class="pipe">|</span>
+                            <i class="fas fa-circle-dot"></i> Media intensidad
                         </div>
                     </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Info Strip -->
+        <div class="container mt-5">
+            <div class="info-strip rounded-4 overflow-hidden" data-aos="fade-up">
+                <div class="info-cell">
+                    <div class="info-cell-icon"><i class="fas fa-users"></i></div>
+                    <h5>Grupos Reducidos</h5>
+                    <p>Máximo 12 personas por sesión para garantizar atención personalizada de tu coach.</p>
+                </div>
+                <div class="info-cell">
+                    <div class="info-cell-icon"><i class="fas fa-medal"></i></div>
+                    <h5>Todos los Niveles</h5>
+                    <p>Cada disciplina tiene variantes adaptadas. No importa tu punto de partida.</p>
+                </div>
+                <div class="info-cell">
+                    <div class="info-cell-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h5>Reserva Online</h5>
+                    <p>Reserva tu lugar con 24 horas de anticipación desde la app o WhatsApp.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Schedule -->
     <section class="py-5 bg-dark-custom">
-        <div class="container py-lg-5">
+        <div class="container py-lg-4">
             <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="display-4 fw-bold section-title">HORARIO <span class="text-accent glow-text">SEMANAL</span></h2>
-                <p class="text-white-50">Organiza tu semana y no pierdas ni un solo entrenamiento.</p>
+                <h2 class="section-title display-4 fw-bold">
+                    HORARIO <span class="text-accent glow-text">SEMANAL</span>
+                </h2>
+                <p class="text-white-50 mt-2">Organiza tu semana y no pierdas ni un solo entrenamiento.</p>
             </div>
 
-            <div class="table-responsive animate-up" data-aos="fade-up">
-                <table class="table table-dark table-borderless text-center align-middle pricing-card overflow-hidden">
-                    <thead>
-                        <tr class="bg-accent text-dark fw-bold">
-                            <th class="py-3">HORA</th>
-                            <th class="py-3">LUNES</th>
-                            <th class="py-3">MARTES</th>
-                            <th class="py-3">MIÉRCOLES</th>
-                            <th class="py-3">JUEVES</th>
-                            <th class="py-3">VIERNES</th>
-                        </tr>
-                    </thead>
-                    <tbody class="small text-white-50">
-                        <tr class="border-bottom border-secondary">
-                            <td class="fw-bold text-accent">06:00 AM</td>
-                            <td>Boxeo</td>
-                            <td>HIIT</td>
-                            <td>Boxeo</td>
-                            <td>HIIT</td>
-                            <td>Cross WOD</td>
-                        </tr>
-                        <tr class="border-bottom border-secondary">
-                            <td class="fw-bold text-accent">09:00 AM</td>
-                            <td>Powerlifting</td>
-                            <td>Yoga</td>
-                            <td>Powerlifting</td>
-                            <td>Yoga</td>
-                            <td>Core</td>
-                        </tr>
-                        <tr class="border-bottom border-secondary">
-                            <td class="fw-bold text-accent">06:00 PM</td>
-                            <td>Cross WOD</td>
-                            <td>Boxeo</td>
-                            <td>HIIT</td>
-                            <td>Cross WOD</td>
-                            <td>Powerlifting</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold text-accent">08:00 PM</td>
-                            <td>Yoga</td>
-                            <td>Core</td>
-                            <td>Yoga</td>
-                            <td>Core</td>
-                            <td>Open Gym</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="table-responsive" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-card p-0 overflow-hidden">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Lunes</th>
+                                <th>Martes</th>
+                                <th>Miércoles</th>
+                                <th>Jueves</th>
+                                <th>Viernes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>06:00 AM</td>
+                                <td><span class="class-pill">Shadow Boxing</span></td>
+                                <td><span class="class-pill">HIIT Intense</span></td>
+                                <td><span class="class-pill">Shadow Boxing</span></td>
+                                <td><span class="class-pill">HIIT Intense</span></td>
+                                <td><span class="class-pill">Cross WOD</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:00 AM</td>
+                                <td><span class="class-pill">Powerlifting</span></td>
+                                <td><span class="class-pill">Iron Yoga</span></td>
+                                <td><span class="class-pill">Powerlifting</span></td>
+                                <td><span class="class-pill">Iron Yoga</span></td>
+                                <td><span class="class-pill">Core Reformer</span></td>
+                            </tr>
+                            <tr>
+                                <td>06:00 PM</td>
+                                <td><span class="class-pill">Cross WOD</span></td>
+                                <td><span class="class-pill">Shadow Boxing</span></td>
+                                <td><span class="class-pill">HIIT Intense</span></td>
+                                <td><span class="class-pill">Cross WOD</span></td>
+                                <td><span class="class-pill">Powerlifting</span></td>
+                            </tr>
+                            <tr>
+                                <td>08:00 PM</td>
+                                <td><span class="class-pill">Iron Yoga</span></td>
+                                <td><span class="class-pill">Core Reformer</span></td>
+                                <td><span class="class-pill">Iron Yoga</span></td>
+                                <td><span class="class-pill">Core Reformer</span></td>
+                                <td><span class="class-pill open">Open Gym</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="py-5">
+        <div class="container py-lg-3">
+            <div class="cta-banner" data-aos="fade-up">
+                <div class="row align-items-center gy-4">
+                    <div class="col-lg-7">
+                        <span class="badge-modern mb-3 d-inline-block">¿Listo para empezar?</span>
+                        <h2 class="section-title display-4 fw-bold mb-3">
+                            TU PRIMERA CLASE<br><span class="text-accent glow-text">ES GRATIS</span>
+                        </h2>
+                        <p class="text-white-50 mb-0" style="max-width: 480px;">
+                            Sin compromisos. Ven, entrena con nosotros y descubre por qué IronForge es el gym que estabas buscando.
+                        </p>
+                    </div>
+                    <div class="col-lg-5 text-lg-end">
+                        <a href="contacto.html" class="btn btn-accent btn-pill btn-hover-effect px-5 py-3 fs-6 me-2">
+                            <span>RESERVAR AHORA</span>
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="entrenadores.html" class="btn btn-outline-accent btn-pill px-4 py-3 fs-6 mt-2 mt-sm-0">
+                            Ver Coaches
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -187,53 +524,69 @@
         <div class="container">
             <div class="row g-4 border-bottom border-secondary pb-5">
                 <div class="col-lg-4">
-                    <h3 class="fw-bold mb-4 brand-logo">
-                        IRON<span class="text-accent">FORGE</span>
-                    </h3>
-                    <p class="text-white-50 small mb-4">
-                        Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.
-                    </p>
+                    <h3 class="fw-bold mb-4 brand-logo">IRON<span class="text-accent">FORGE</span></h3>
+                    <p class="text-white-50 small mb-4">Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.</p>
                     <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 ms-auto">
-                    <h6 class="fw-bold mb-4 text-accent">Navegación</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Navegación</h6>
                     <ul class="list-unstyled small footer-links">
+                        <li><a href="index.html">Inicio</a></li>
                         <li><a href="clases.html">Clases</a></li>
                         <li><a href="entrenadores.html">Coaches</a></li>
                         <li><a href="contacto.html">Unirme</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3">
-                    <h6 class="fw-bold mb-4 text-accent">Contacto</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Contacto</h6>
                     <ul class="list-unstyled small text-white-50">
                         <li class="mb-2"><i class="fas fa-map-marker-alt text-accent me-2"></i> Lima, Perú</li>
                         <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +51 999 888 777</li>
                         <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> info@ironforge.pe</li>
+                        <li class="mb-2"><i class="fas fa-clock text-accent me-2"></i> Lun–Vie: 5am – 10pm</li>
                     </ul>
                 </div>
             </div>
             <div class="pt-4 text-center">
                 <p class="small text-white-50 mb-0">
-                    &copy; 2026 IronForge Studio | <strong class="text-accent">Diseñado por Jean Avalos</strong>
+                    &copy; 2026 IronForge Studio &nbsp;|&nbsp; <strong class="text-accent">Diseñado por Jean Avalos</strong>
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" class="scroll-top-btn">
+    <!-- Scroll to Top -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="main.js"></script>
-</body>
+    <script>
+        AOS.init({ duration: 700, once: true, offset: 60 });
 
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const pre = document.getElementById('preloader');
+                if (pre) pre.classList.add('hidden');
+            }, 600);
+        });
+
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        const btn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+</body>
 </html>
