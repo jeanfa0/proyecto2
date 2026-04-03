@@ -13,260 +13,259 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* ── HERO ───────────────────────────────────── */
-        .coaches-hero {
-            min-height: 52vh;
-            background:
-                linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.97) 100%),
-                url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&q=80') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            padding-top: 90px;
-        }
-        .coaches-hero .eyebrow {
-            display: inline-block;
-            font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 4px; text-transform: uppercase;
-            color: var(--accent-primary);
-            background: rgba(245,183,84,0.08);
-            border: 1px solid rgba(245,183,84,0.25);
-            padding: 6px 18px; border-radius: 50px;
-            margin-bottom: 1.5rem;
-        }
+    /* ── HERO ───────────────────────────────────── */
+    .coaches-hero {
+        min-height: 52vh;
+        background:
+            linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.97) 100%),
+            url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&q=80') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        padding-top: 90px;
+    }
+    .coaches-hero .eyebrow {
+        display: inline-block;
+        font-size: 0.75rem; font-weight: 700;
+        letter-spacing: 4px; text-transform: uppercase;
+        color: var(--accent-primary);
+        background: rgba(245,183,84,0.08);
+        border: 1px solid rgba(245,183,84,0.25);
+        padding: 6px 18px; border-radius: 50px;
+        margin-bottom: 1.5rem;
+    }
 
-        /* ── COACH CARDS ────────────────────────────── */
-        .coach-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            overflow: hidden;
-            height: 100%;
-            transition: all var(--transition-base);
-            position: relative;
-        }
-        .coach-card::before {
-            content: '';
-            position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: var(--accent-gradient);
-            border-radius: 26px;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity var(--transition-base);
-        }
-        .coach-card:hover { transform: translateY(-8px); }
-        .coach-card:hover::before { opacity: 1; }
+    /* ── COACH CARDS ────────────────────────────── */
+    .coach-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        overflow: hidden;
+        height: 100%;
+        transition: all var(--transition-base);
+        position: relative;
+    }
+    .coach-card::before {
+        content: '';
+        position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+        background: var(--accent-gradient);
+        border-radius: 26px;
+        opacity: 0;
+        z-index: -1;
+        transition: opacity var(--transition-base);
+    }
+    .coach-card:hover { transform: translateY(-8px); }
+    .coach-card:hover::before { opacity: 1; }
 
-        /* Image area */
-        .coach-img-wrap {
-            position: relative;
-            height: 260px;
-            overflow: hidden;
-            background: var(--secondary-bg);
-        }
-        .coach-img-wrap img {
-            width: 100%; height: 100%;
-            object-fit: cover; object-position: top;
-            filter: grayscale(20%) brightness(0.85);
-            transition: transform 0.6s cubic-bezier(.4,0,.2,1), filter 0.4s ease;
-        }
-        .coach-card:hover .coach-img-wrap img {
-            transform: scale(1.06);
-            filter: grayscale(0%) brightness(0.9);
-        }
-        .coach-img-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%);
-        }
+    /* Image area — altura única para TODAS las cards */
+    .coach-img-wrap {
+        position: relative;
+        height: 260px;
+        overflow: hidden;
+        background: var(--secondary-bg);
+    }
+    .coach-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: top;
+        filter: grayscale(20%) brightness(0.85);
+        transition: transform 0.6s cubic-bezier(.4,0,.2,1), filter 0.4s ease;
+    }
+    .coach-card:hover .coach-img-wrap img {
+        transform: scale(1.06);
+        filter: grayscale(0%) brightness(0.9);
+    }
+    .coach-img-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%);
+    }
 
-        /* Number badge */
-        .coach-number {
-            position: absolute;
-            top: 16px; left: 16px;
-            font-family: 'Bebas Neue', cursive;
-            font-size: 13px; letter-spacing: 1px;
-            color: var(--accent-primary);
-            background: rgba(10,10,10,0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(245,183,84,0.2);
-            padding: 4px 12px; border-radius: 40px;
-        }
+    /* Number badge */
+    .coach-number {
+        position: absolute;
+        top: 16px; left: 16px;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 13px; letter-spacing: 1px;
+        color: var(--accent-primary);
+        background: rgba(10,10,10,0.75);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(245,183,84,0.2);
+        padding: 4px 12px; border-radius: 40px;
+    }
 
-        /* Specialty badge on image */
-        .coach-specialty-img {
-            position: absolute;
-            bottom: 16px; left: 16px;
-            font-size: 0.65rem; font-weight: 700;
-            letter-spacing: 1.5px; text-transform: uppercase;
-            color: var(--accent-primary);
-            background: rgba(10,10,10,0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(245,183,84,0.25);
-            padding: 5px 12px; border-radius: 4px;
-        }
+    /* Specialty badge on image */
+    .coach-specialty-img {
+        position: absolute;
+        bottom: 16px; left: 16px;
+        font-size: 0.65rem; font-weight: 700;
+        letter-spacing: 1.5px; text-transform: uppercase;
+        color: var(--accent-primary);
+        background: rgba(10,10,10,0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(245,183,84,0.25);
+        padding: 5px 12px; border-radius: 4px;
+    }
 
-        /* Body */
-        .coach-body {
-            padding: 24px 24px 20px;
-        }
-        .coach-name {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 26px; letter-spacing: 1px;
-            line-height: 1; margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        .coach-role {
-            font-size: 11px; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase;
-            color: var(--accent-primary);
-            margin-bottom: 14px;
-        }
-        .coach-bio {
-            font-size: 13.5px;
-            color: var(--text-secondary);
-            line-height: 1.65;
-            margin-bottom: 20px;
-        }
+    /* Badge HEAD COACH (reemplaza featured-crown) */
+    .featured-crown {
+        position: absolute; top: 16px; right: 16px;
+        background: var(--accent-gradient);
+        color: var(--primary-bg);
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 2px; text-transform: uppercase;
+        padding: 5px 12px; border-radius: 4px;
+    }
 
-        /* Stats row */
-        .coach-stats {
-            display: flex; gap: 0;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .coach-stat {
-            flex: 1; text-align: center;
-            padding: 12px 8px;
-            border-right: 1px solid var(--border-color);
-            transition: background var(--transition-fast);
-        }
-        .coach-stat:last-child { border-right: none; }
-        .coach-stat:hover { background: rgba(245,183,84,0.05); }
-        .coach-stat-val {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 22px; letter-spacing: 0.5px;
-            color: var(--accent-primary); line-height: 1;
-        }
-        .coach-stat-lbl {
-            font-size: 9px; font-weight: 700;
-            letter-spacing: 1px; text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
+    /* Body */
+    .coach-body {
+        padding: 24px 24px 20px;
+    }
+    .coach-name {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 26px; letter-spacing: 1px;
+        line-height: 1; margin-bottom: 4px;
+        color: var(--text-primary);
+    }
+    .coach-role {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 2px; text-transform: uppercase;
+        color: var(--accent-primary);
+        margin-bottom: 14px;
+    }
+    .coach-bio {
+        font-size: 13.5px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        margin-bottom: 20px;
+    }
 
-        /* Footer row */
-        .coach-footer {
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .coach-socials { display: flex; gap: 8px; }
-        .coach-social {
-            width: 34px; height: 34px;
-            background: rgba(245,183,84,0.06);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted); font-size: 13px;
-            text-decoration: none;
-            transition: all var(--transition-base);
-        }
-        .coach-social:hover {
-            background: var(--accent-gradient);
-            border-color: transparent;
-            color: var(--primary-bg);
-            transform: translateY(-2px);
-        }
-        .coach-tag {
-            font-size: 10px; font-weight: 700;
-            letter-spacing: 1px; text-transform: uppercase;
-            padding: 5px 12px; border-radius: 40px;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-        }
-        .coach-card:hover .coach-tag {
-            border-color: rgba(245,183,84,0.3);
-            color: var(--accent-primary);
-            background: rgba(245,183,84,0.06);
-        }
+    /* Stats row */
+    .coach-stats {
+        display: flex; gap: 0;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .coach-stat {
+        flex: 1; text-align: center;
+        padding: 12px 8px;
+        border-right: 1px solid var(--border-color);
+        transition: background var(--transition-fast);
+    }
+    .coach-stat:last-child { border-right: none; }
+    .coach-stat:hover { background: rgba(245,183,84,0.05); }
+    .coach-stat-val {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 22px; letter-spacing: 0.5px;
+        color: var(--accent-primary); line-height: 1;
+    }
+    .coach-stat-lbl {
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 3px;
+    }
 
-        /* ── FEATURED / HEAD COACH ──────────────────── */
-        .coach-card.featured {
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(245,183,84,0.04) 100%);
-        }
-        .coach-card.featured .coach-img-wrap { height: 300px; }
-        .featured-crown {
-            position: absolute; top: 16px; right: 16px;
-            background: var(--accent-gradient);
-            color: var(--primary-bg);
-            font-size: 9px; font-weight: 800;
-            letter-spacing: 2px; text-transform: uppercase;
-            padding: 5px 12px; border-radius: 4px;
-        }
+    /* Footer row */
+    .coach-footer {
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .coach-socials { display: flex; gap: 8px; }
+    .coach-social {
+        width: 34px; height: 34px;
+        background: rgba(245,183,84,0.06);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-muted); font-size: 13px;
+        text-decoration: none;
+        transition: all var(--transition-base);
+    }
+    .coach-social:hover {
+        background: var(--accent-gradient);
+        border-color: transparent;
+        color: var(--primary-bg);
+        transform: translateY(-2px);
+    }
+    .coach-tag {
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase;
+        padding: 5px 12px; border-radius: 40px;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+    }
+    .coach-card:hover .coach-tag {
+        border-color: rgba(245,183,84,0.3);
+        color: var(--accent-primary);
+        background: rgba(245,183,84,0.06);
+    }
 
-        /* ── VALUES STRIP ───────────────────────────── */
-        .values-strip {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border-color);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .value-cell {
-            background: var(--card-bg);
-            padding: 36px 28px;
-            text-align: center;
-            transition: background var(--transition-base);
-        }
-        .value-cell:hover { background: var(--secondary-bg); }
-        .value-num {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 48px; letter-spacing: 1px;
-            color: var(--accent-primary);
-            line-height: 1;
-        }
-        .value-label {
-            font-size: 11px; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
+    /* ── FEATURED — solo conserva el badge, sin estilos visuales distintos ── */
+    .coach-card.featured .coach-img-wrap { height: 260px; } /* igual que el resto */
 
-        /* ── CTA BANNER ─────────────────────────────── */
-        .cta-banner {
-            background:
-                radial-gradient(ellipse 70% 80% at 15% 50%, rgba(245,183,84,0.1) 0%, transparent 60%),
-                var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 64px 56px;
-            position: relative;
-            overflow: hidden;
-        }
-        .cta-banner::before {
-            content: 'ELITE';
-            position: absolute;
-            right: -10px; top: 50%;
-            transform: translateY(-50%);
-            font-family: 'Bebas Neue', cursive;
-            font-size: 200px; letter-spacing: -4px;
-            color: rgba(245,183,84,0.04);
-            pointer-events: none; user-select: none;
-            line-height: 1;
-        }
+    /* ── VALUES STRIP ───────────────────────────── */
+    .values-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--border-color);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .value-cell {
+        background: var(--card-bg);
+        padding: 36px 28px;
+        text-align: center;
+        transition: background var(--transition-base);
+    }
+    .value-cell:hover { background: var(--secondary-bg); }
+    .value-num {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 48px; letter-spacing: 1px;
+        color: var(--accent-primary);
+        line-height: 1;
+    }
+    .value-label {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 2px; text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 6px;
+    }
 
-        /* ── RESPONSIVE ─────────────────────────────── */
-        @media (max-width: 991px) {
-            .values-strip { grid-template-columns: repeat(2, 1fr); }
-            .cta-banner { padding: 48px 36px; }
-        }
-        @media (max-width: 640px) {
-            .values-strip { grid-template-columns: repeat(2, 1fr); }
-            .cta-banner { padding: 40px 24px; }
-            .cta-banner::before { font-size: 100px; }
-        }
-    </style>
+    /* ── CTA BANNER ─────────────────────────────── */
+    .cta-banner {
+        background:
+            radial-gradient(ellipse 70% 80% at 15% 50%, rgba(245,183,84,0.1) 0%, transparent 60%),
+            var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 64px 56px;
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-banner::before {
+        content: 'ELITE';
+        position: absolute;
+        right: -10px; top: 50%;
+        transform: translateY(-50%);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 200px; letter-spacing: -4px;
+        color: rgba(245,183,84,0.04);
+        pointer-events: none; user-select: none;
+        line-height: 1;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 991px) {
+        .values-strip { grid-template-columns: repeat(2, 1fr); }
+        .cta-banner { padding: 48px 36px; }
+    }
+    @media (max-width: 640px) {
+        .values-strip { grid-template-columns: repeat(2, 1fr); }
+        .cta-banner { padding: 40px 24px; }
+        .cta-banner::before { font-size: 100px; }
+    }
+</style>
 </head>
 <body class="bg-black text-white">
 
