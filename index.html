@@ -4,13 +4,339 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronForge Studio | High Performance Gym - Jean Avalos</title>
-    
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
-    
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ── HERO MEJORADO ───────────────────────────── */
+        .hero-fitness {
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, rgba(10,10,10,0.96) 0%, rgba(20,20,20,0.88) 100%),
+                url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920') center/cover no-repeat;
+            position: relative;
+            padding-top: 100px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.08);
+            border: 1px solid rgba(245,183,84,0.25);
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-bottom: 1.75rem;
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: 2px;
+        }
+
+        /* Línea decorativa bajo título */
+        .hero-title-line {
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            margin: 1.5rem 0;
+        }
+
+        /* Stats card lateral mejorada */
+        .hero-stats-card {
+            background: rgba(26,26,26,0.55);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-stats-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        .stat-item:last-child { border-bottom: none; }
+
+        .stat-val {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3.5rem;
+            color: var(--accent-primary);
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+        .stat-suffix {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: var(--accent-primary);
+        }
+        .stat-lbl {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Floating tags en hero */
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 2rem;
+        }
+        .hero-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            transition: all var(--transition-base);
+        }
+        .hero-tag:hover {
+            border-color: rgba(245,183,84,0.3);
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.06);
+        }
+
+        /* ── STRIP DE MÉTRICAS ─────────────────────── */
+        .metrics-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .metric-cell {
+            background: var(--card-bg);
+            padding: 32px 24px;
+            text-align: center;
+            transition: background var(--transition-base);
+        }
+        .metric-cell:hover { background: var(--secondary-bg); }
+        .metric-num {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 44px;
+            color: var(--accent-primary);
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+        .metric-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ── FEATURE CARDS MEJORADAS ─────────────────  */
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            height: 100%;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--accent-gradient);
+            border-radius: 26px;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            z-index: -1;
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+
+        .feature-icon {
+            width: 64px; height: 64px;
+            background: rgba(245,183,84,0.08);
+            border: 1px solid rgba(245,183,84,0.2);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all var(--transition-base);
+        }
+        .feature-icon i { font-size: 1.6rem; color: var(--accent-primary); transition: all var(--transition-base); }
+        .feature-card:hover .feature-icon { background: var(--accent-gradient); border-color: transparent; }
+        .feature-card:hover .feature-icon i { color: var(--primary-bg); }
+
+        .feature-line {
+            width: 40px; height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            margin-top: 1.5rem;
+            transition: width var(--transition-base);
+        }
+        .feature-card:hover .feature-line { width: 80px; }
+
+        /* ── PLANES / PRICING MEJORADOS ──────────────── */
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all var(--transition-base);
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245,183,84,0.07), transparent);
+            transition: left 0.6s ease;
+        }
+        .pricing-card:hover::before { left: 100%; }
+
+        .pricing-basic:hover {
+            transform: translateY(-8px);
+            border-color: rgba(245,183,84,0.3);
+            box-shadow: var(--shadow-md);
+        }
+        .pricing-elite {
+            background: var(--accent-gradient);
+            color: var(--primary-bg);
+            border: none;
+            transform: scale(1.04);
+            box-shadow: var(--shadow-lg);
+        }
+        .pricing-elite:hover {
+            transform: scale(1.07) translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+        .pricing-badge {
+            position: absolute;
+            top: 18px; right: -34px;
+            background: var(--primary-bg);
+            color: var(--accent-primary);
+            padding: 0.35rem 3rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            box-shadow: var(--shadow-md);
+        }
+        .pricing-header { margin-bottom: 2rem; }
+        .pricing-amount {
+            display: flex; align-items: baseline; justify-content: center; gap: 4px;
+            margin: 1.25rem 0;
+        }
+        .currency { font-size: 1.4rem; font-weight: 700; opacity: 0.7; }
+        .price { font-size: 4.5rem; font-weight: 800; font-family: 'Bebas Neue', cursive; line-height: 1; }
+        .period { font-size: 0.95rem; opacity: 0.6; }
+        .pricing-features {
+            list-style: none; padding: 0; margin: 1.5rem 0; text-align: left;
+        }
+        .pricing-features li {
+            padding: 0.7rem 0;
+            font-size: 0.9rem;
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .pricing-features li:last-child { border-bottom: none; }
+        .pricing-features i { font-size: 0.85rem; width: 18px; flex-shrink: 0; }
+        .pricing-basic .pricing-features i.fa-check { color: var(--accent-primary); }
+        .pricing-elite .pricing-features i.fa-check { color: var(--primary-bg); }
+        .pricing-features li.disabled { opacity: 0.35; text-decoration: line-through; }
+
+        /* ── TESTIMONIAL / SOCIAL PROOF ──────────────── */
+        .testimonials-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .testi-cell {
+            background: var(--card-bg);
+            padding: 32px 28px;
+            transition: background var(--transition-base);
+        }
+        .testi-cell:hover { background: var(--secondary-bg); }
+        .testi-stars { color: var(--accent-primary); font-size: 12px; letter-spacing: 2px; margin-bottom: 12px; }
+        .testi-text { font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+        .testi-author { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-primary); }
+
+        /* ── CTA BANNER ─────────────────────────────── */
+        .cta-banner {
+            background:
+                radial-gradient(ellipse 60% 80% at 10% 50%, rgba(245,183,84,0.1) 0%, transparent 60%),
+                var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 64px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-banner::before {
+            content: 'IRONFORGE';
+            position: absolute;
+            right: -20px; top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Bebas Neue', cursive;
+            font-size: 140px; letter-spacing: -3px;
+            color: rgba(245,183,84,0.04);
+            pointer-events: none; user-select: none;
+            line-height: 1; white-space: nowrap;
+        }
+
+        /* ── RESPONSIVE ─────────────────────────────── */
+        @media (max-width: 991px) {
+            .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-strip { grid-template-columns: 1fr; }
+            .cta-banner { padding: 48px 32px; }
+            .pricing-elite { transform: scale(1); }
+        }
+        @media (max-width: 640px) {
+            .cta-banner { padding: 40px 24px; }
+            .cta-banner::before { font-size: 70px; }
+        }
+    </style>
 </head>
 <body class="bg-black text-white">
 
@@ -31,7 +357,6 @@
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link px-3 active" href="index.html">Inicio</a></li>
@@ -39,7 +364,7 @@
                     <li class="nav-item"><a class="nav-link px-3" href="entrenadores.html">Coaches</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="contacto.html">Contacto</a></li>
                     <li class="nav-item ms-lg-4">
-                        <a class="btn btn-accent btn-pill px-4 py-2" href="contacto.html">
+                        <a class="btn btn-accent btn-pill btn-hover-effect px-4 py-2" href="contacto.html">
                             <span>PRUEBA GRATIS</span>
                             <i class="fas fa-arrow-right ms-2"></i>
                         </a>
@@ -49,24 +374,24 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="hero-fitness d-flex align-items-center position-relative overflow-hidden">
+    <!-- ── HERO ─────────────────────────────────────── -->
+    <header class="hero-fitness">
         <div class="hero-overlay"></div>
-        <div class="particles-bg" id="particles"></div>
-        
-        <div class="container text-center text-lg-start position-relative">
-            <div class="row align-items-center">
+        <div class="container position-relative">
+            <div class="row align-items-center g-5">
+                <!-- Texto -->
                 <div class="col-lg-7">
-                    <span class="badge-modern mb-3" data-aos="fade-up">
-                        <i class="fas fa-fire me-2"></i>Sin Excusas, Solo Resultados
+                    <span class="hero-eyebrow" data-aos="fade-down">
+                        <i class="fas fa-fire"></i> Sin Excusas, Solo Resultados
                     </span>
-                    <h1 class="display-1 fw-bold mb-4 hero-title" data-aos="fade-up" data-aos-delay="100">
-                        FORJA TU MEJOR <br> <span class="text-accent glow-text">VERSIÓN</span>
+                    <h1 class="hero-title mb-0" data-aos="fade-up" data-aos-delay="100">
+                        FORJA TU<br><span class="text-accent glow-text">MEJOR</span><br>VERSIÓN
                     </h1>
-                    <p class="lead text-white-50 mb-5" data-aos="fade-up" data-aos-delay="200">
+                    <span class="hero-title-line" data-aos="fade-up" data-aos-delay="180"></span>
+                    <p class="lead text-white-50 mb-4" data-aos="fade-up" data-aos-delay="200" style="max-width:520px;">
                         Entrenamiento de élite y nutrición personalizada bajo la metodología de <strong class="text-accent">Jean Avalos</strong>. El cambio empieza hoy.
                     </p>
-                    <div class="d-flex flex-column flex-sm-row gap-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="d-flex flex-column flex-sm-row gap-3" data-aos="fade-up" data-aos-delay="280">
                         <a href="clases.html" class="btn btn-accent btn-pill px-5 py-3 btn-hover-effect">
                             <span>EMPEZAR AHORA</span>
                             <i class="fas fa-bolt ms-2"></i>
@@ -76,61 +401,92 @@
                             <i class="fas fa-chevron-down ms-2"></i>
                         </a>
                     </div>
+                    <div class="hero-tags" data-aos="fade-up" data-aos-delay="360">
+                        <span class="hero-tag">CrossFit</span>
+                        <span class="hero-tag">Powerlifting</span>
+                        <span class="hero-tag">Nutrición</span>
+                        <span class="hero-tag">Yoga</span>
+                        <span class="hero-tag">Boxeo</span>
+                    </div>
                 </div>
-                <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left" data-aos-delay="400">
+
+                <!-- Stats card -->
+                <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left" data-aos-delay="300">
                     <div class="hero-stats-card">
                         <div class="stat-item">
-                            <h3 class="display-4 fw-bold text-accent mb-0 counter" data-target="500">0</h3>
-                            <p class="text-white-50 small mb-0">Miembros Activos</p>
+                            <div><span class="stat-val counter" data-target="500">0</span><span class="stat-suffix">+</span></div>
+                            <p class="stat-lbl">Miembros Activos</p>
                         </div>
                         <div class="stat-item">
-                            <h3 class="display-4 fw-bold text-accent mb-0 counter" data-target="15">0</h3>
-                            <p class="text-white-50 small mb-0">Coaches Certificados</p>
+                            <div><span class="stat-val counter" data-target="6">0</span></div>
+                            <p class="stat-lbl">Coaches Certificados</p>
                         </div>
                         <div class="stat-item">
-                            <h3 class="display-4 fw-bold text-accent mb-0 counter" data-target="98">0</h3>
-                            <p class="text-white-50 small mb-0">% Satisfacción</p>
+                            <div><span class="stat-val counter" data-target="98">0</span><span class="stat-suffix">%</span></div>
+                            <p class="stat-lbl">Satisfacción</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
         <div class="scroll-indicator">
             <div class="mouse"></div>
         </div>
     </header>
 
-    <!-- Features Section -->
-    <section class="py-5 bg-dark-custom position-relative">
-        <div class="container py-lg-5">
+    <!-- ── MÉTRICAS STRIP ───────────────────────────── -->
+    <section class="py-5">
+        <div class="container" data-aos="fade-up">
+            <div class="metrics-strip">
+                <div class="metric-cell">
+                    <div class="metric-num">5am</div>
+                    <div class="metric-label">Apertura Diaria</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num">20+</div>
+                    <div class="metric-label">Clases Semanales</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num">15</div>
+                    <div class="metric-label">Años en el Mercado</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-num">12</div>
+                    <div class="metric-label">Títulos & Récords</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FEATURES ─────────────────────────────────── -->
+    <section class="py-5 bg-dark-custom">
+        <div class="container py-lg-4">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="badge-modern mb-3 d-inline-block">¿Por qué elegirnos?</span>
+                <h2 class="section-title display-5 fw-bold">LO QUE NOS HACE <span class="text-accent glow-text">DIFERENTES</span></h2>
+                <p class="text-white-50 mt-2" style="max-width:480px; margin:0 auto;">Cada detalle está diseñado para maximizar tu rendimiento y resultados.</p>
+            </div>
             <div class="row g-4">
                 <div class="col-md-4" data-aos="fade-up">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-dumbbell"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Equipamiento Top</h4>
+                        <div class="feature-icon"><i class="fas fa-dumbbell"></i></div>
+                        <h4 class="fw-bold mb-2">Equipamiento Top</h4>
                         <p class="text-white-50 small">Máquinas de última generación y zonas de peso libre diseñadas para el máximo rendimiento.</p>
                         <div class="feature-line"></div>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-user-ninja"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Coaches Certificados</h4>
-                        <p class="text-white-50 small">Asesoría constante por expertos en biomecánica y alto rendimiento deportivo.</p>
+                        <div class="feature-icon"><i class="fas fa-user-ninja"></i></div>
+                        <h4 class="fw-bold mb-2">Coaches Certificados</h4>
+                        <p class="text-white-50 small">Asesoría constante por expertos en biomecánica, nutrición y alto rendimiento deportivo.</p>
                         <div class="feature-line"></div>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-apple-alt"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Plan Nutricional</h4>
+                        <div class="feature-icon"><i class="fas fa-apple-alt"></i></div>
+                        <h4 class="fw-bold mb-2">Plan Nutricional</h4>
                         <p class="text-white-50 small">Dietas personalizadas que se adaptan a tu ritmo de vida y objetivos específicos.</p>
                         <div class="feature-line"></div>
                     </div>
@@ -139,25 +495,22 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="py-5 position-relative" id="planes">
-        <div class="container py-lg-5">
+    <!-- ── PLANES ────────────────────────────────────── -->
+    <section class="py-5" id="planes">
+        <div class="container py-lg-4">
             <div class="text-center mb-5" data-aos="fade-up">
-                <span class="badge-modern mb-3">
+                <span class="badge-modern mb-3 d-inline-block">
                     <i class="fas fa-crown me-2"></i>Elige tu nivel
                 </span>
-                <h2 class="display-4 fw-bold section-title">
-                    PLANES DE <span class="text-accent glow-text">MEMBRESÍA</span>
-                </h2>
-                <p class="text-white-50">Elige el nivel de compromiso que tu cuerpo merece.</p>
+                <h2 class="section-title display-5 fw-bold">PLANES DE <span class="text-accent glow-text">MEMBRESÍA</span></h2>
+                <p class="text-white-50 mt-2">Elige el nivel de compromiso que tu cuerpo merece.</p>
             </div>
-            
-            <div class="row g-4 justify-content-center">
+            <div class="row g-4 justify-content-center align-items-stretch">
                 <!-- Plan Basic -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="pricing-card pricing-basic">
+                    <div class="pricing-card pricing-basic h-100">
                         <div class="pricing-header">
-                            <h5 class="text-uppercase small mb-3 text-white-50">Plan Basic</h5>
+                            <h5 class="text-uppercase small mb-3 text-white-50" style="letter-spacing:3px;">Plan Basic</h5>
                             <div class="pricing-amount">
                                 <span class="currency">S/</span>
                                 <span class="price">120</span>
@@ -170,20 +523,17 @@
                             <li class="disabled"><i class="fas fa-times"></i> Nutrición personalizada</li>
                             <li class="disabled"><i class="fas fa-times"></i> Entrenador Personal</li>
                         </ul>
-                        <button class="btn btn-outline-accent btn-pill w-100 btn-hover-effect">
+                        <a href="contacto.html" class="btn btn-outline-accent btn-pill w-100 btn-hover-effect py-3">
                             <span>ELEGIR PLAN</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
-                
                 <!-- Plan Elite -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="pricing-card pricing-elite">
-                        <span class="pricing-badge">
-                            <i class="fas fa-star me-2"></i>RECOMENDADO
-                        </span>
+                    <div class="pricing-card pricing-elite h-100">
+                        <span class="pricing-badge"><i class="fas fa-star me-1"></i> RECOMENDADO</span>
                         <div class="pricing-header">
-                            <h5 class="text-uppercase small mb-3 fw-bold">Plan Elite</h5>
+                            <h5 class="text-uppercase small mb-3 fw-bold" style="letter-spacing:3px;">Plan Elite</h5>
                             <div class="pricing-amount">
                                 <span class="currency">S/</span>
                                 <span class="price">250</span>
@@ -196,86 +546,163 @@
                             <li><i class="fas fa-check"></i> Plan de Nutrición Pro</li>
                             <li><i class="fas fa-check"></i> 4 sesiones con Coach</li>
                         </ul>
-                        <button class="btn btn-dark btn-pill w-100 py-3 fw-bold btn-hover-effect">
+                        <a href="contacto.html" class="btn btn-dark btn-pill w-100 py-3 fw-bold btn-hover-effect">
                             <span>SUSCRIBIRME AHORA</span>
                             <i class="fas fa-arrow-right ms-2"></i>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-5 bg-gradient-accent">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <div class="col-lg-8" data-aos="fade-right">
-                    <h2 class="display-5 fw-bold mb-3">¿Listo para transformarte?</h2>
-                    <p class="lead mb-0">Únete a la comunidad fitness más exclusiva de Lima y alcanza tus metas.</p>
+    <!-- ── TESTIMONIOS ───────────────────────────────── -->
+    <section class="py-5 bg-dark-custom">
+        <div class="container py-lg-3">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="badge-modern mb-3 d-inline-block">Lo que dicen nuestros miembros</span>
+                <h2 class="section-title display-5 fw-bold">RESULTADOS <span class="text-accent glow-text">REALES</span></h2>
+            </div>
+            <div class="testimonials-strip" data-aos="fade-up" data-aos-delay="100">
+                <div class="testi-cell">
+                    <div class="testi-stars">★★★★★</div>
+                    <p class="testi-text">"Bajé 12 kilos en 3 meses con el plan Elite. Los coaches son increíbles y el ambiente te motiva a seguir."</p>
+                    <p class="testi-author">— Carla M., Plan Elite</p>
                 </div>
-                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
-                    <a href="contacto.html" class="btn btn-dark btn-pill px-5 py-3 btn-hover-effect">
-                        <span>AGENDA TU PRUEBA</span>
-                        <i class="fas fa-calendar-check ms-2"></i>
-                    </a>
+                <div class="testi-cell">
+                    <div class="testi-stars">★★★★★</div>
+                    <p class="testi-text">"Marco me ayudó a clasificar a mi primer campeonato nacional. El nivel del staff no se encuentra en otro gym de Lima."</p>
+                    <p class="testi-author">— Diego R., CrossFit</p>
+                </div>
+                <div class="testi-cell">
+                    <div class="testi-stars">★★★★★</div>
+                    <p class="testi-text">"El plan nutricional de Sara cambió mi vida. Nunca pensé que comer bien podía ser tan sencillo y efectivo."</p>
+                    <p class="testi-author">— Lucía P., Nutrición</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ── CTA ───────────────────────────────────────── -->
+    <section class="py-5">
+        <div class="container py-lg-3">
+            <div class="cta-banner" data-aos="fade-up">
+                <div class="row align-items-center gy-4">
+                    <div class="col-lg-7">
+                        <span class="badge-modern mb-3 d-inline-block">¿Listo para empezar?</span>
+                        <h2 class="section-title display-4 fw-bold mb-3">
+                            ÚNETE A LA<br><span class="text-accent glow-text">ÉLITE</span>
+                        </h2>
+                        <p class="text-white-50 mb-0" style="max-width:480px;">
+                            Tu primera sesión es completamente gratis. Conoce a tu coach, evalúa tu nivel y recibe un plan personalizado.
+                        </p>
+                    </div>
+                    <div class="col-lg-5 text-lg-end">
+                        <a href="contacto.html" class="btn btn-accent btn-pill btn-hover-effect px-5 py-3 fs-6 me-2">
+                            <span>AGENDA TU PRUEBA</span>
+                            <i class="fas fa-calendar-check ms-2"></i>
+                        </a>
+                        <a href="clases.html" class="btn btn-outline-accent btn-pill px-4 py-3 fs-6 mt-2 mt-sm-0">
+                            Ver Clases
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ─────────────────────────────────────── -->
     <footer class="bg-dark-custom pt-5 pb-4">
         <div class="container">
             <div class="row g-4 border-bottom border-secondary pb-5">
                 <div class="col-lg-4">
-                    <h3 class="fw-bold mb-4 brand-logo">
-                        IRON<span class="text-accent">FORGE</span>
-                    </h3>
-                    <p class="text-white-50 small mb-4">
-                        Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.
-                    </p>
+                    <h3 class="fw-bold mb-4 brand-logo">IRON<span class="text-accent">FORGE</span></h3>
+                    <p class="text-white-50 small mb-4">Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.</p>
                     <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 ms-auto">
-                    <h6 class="fw-bold mb-4 text-accent">Navegación</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Navegación</h6>
                     <ul class="list-unstyled small footer-links">
+                        <li><a href="index.html">Inicio</a></li>
                         <li><a href="clases.html">Clases</a></li>
                         <li><a href="entrenadores.html">Coaches</a></li>
                         <li><a href="contacto.html">Unirme</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3">
-                    <h6 class="fw-bold mb-4 text-accent">Contacto</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Contacto</h6>
                     <ul class="list-unstyled small text-white-50">
                         <li class="mb-2"><i class="fas fa-map-marker-alt text-accent me-2"></i> Lima, Perú</li>
                         <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +51 999 888 777</li>
                         <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> info@ironforge.pe</li>
+                        <li class="mb-2"><i class="fas fa-clock text-accent me-2"></i> Lun–Vie: 5am – 10pm</li>
                     </ul>
                 </div>
             </div>
             <div class="pt-4 text-center">
                 <p class="small text-white-50 mb-0">
-                    &copy; 2026 IronForge Studio | <strong class="text-accent">Diseñado por Jean Avalos</strong>
+                    &copy; 2026 IronForge Studio &nbsp;|&nbsp; <strong class="text-accent">Diseñado por Jean Avalos</strong>
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" class="scroll-top-btn">
+    <!-- Scroll to Top -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="main.js"></script>
-</body>
+    <script>
+        AOS.init({ duration: 700, once: true, offset: 60 });
 
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const pre = document.getElementById('preloader');
+                if (pre) pre.classList.add('hidden');
+            }, 600);
+        });
+
+        // Navbar scroll
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        // Scroll top btn
+        const btn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = +el.dataset.target;
+                const duration = 1800;
+                const step = target / (duration / 16);
+                let current = 0;
+                const update = () => {
+                    current = Math.min(current + step, target);
+                    el.textContent = Math.floor(current);
+                    if (current < target) requestAnimationFrame(update);
+                };
+                requestAnimationFrame(update);
+                observer.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(c => observer.observe(c));
+    </script>
+</body>
 </html>
