@@ -3,14 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IronForge Studio | High Performance Gym - Jean Avalos</title>
-    
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
-    
+    <title>IronForge Studio | Coaches Elite</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ── HERO ───────────────────────────────────── */
+        .coaches-hero {
+            min-height: 52vh;
+            background:
+                linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.97) 100%),
+                url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            padding-top: 90px;
+        }
+        .coaches-hero .eyebrow {
+            display: inline-block;
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 4px; text-transform: uppercase;
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.08);
+            border: 1px solid rgba(245,183,84,0.25);
+            padding: 6px 18px; border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── COACH CARDS ────────────────────────────── */
+        .coach-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            overflow: hidden;
+            height: 100%;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+        .coach-card::before {
+            content: '';
+            position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--accent-gradient);
+            border-radius: 26px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity var(--transition-base);
+        }
+        .coach-card:hover { transform: translateY(-8px); }
+        .coach-card:hover::before { opacity: 1; }
+
+        /* Image area */
+        .coach-img-wrap {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+            background: var(--secondary-bg);
+        }
+        .coach-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover; object-position: top;
+            filter: grayscale(20%) brightness(0.85);
+            transition: transform 0.6s cubic-bezier(.4,0,.2,1), filter 0.4s ease;
+        }
+        .coach-card:hover .coach-img-wrap img {
+            transform: scale(1.06);
+            filter: grayscale(0%) brightness(0.9);
+        }
+        .coach-img-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 50%);
+        }
+
+        /* Number badge */
+        .coach-number {
+            position: absolute;
+            top: 16px; left: 16px;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 13px; letter-spacing: 1px;
+            color: var(--accent-primary);
+            background: rgba(10,10,10,0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(245,183,84,0.2);
+            padding: 4px 12px; border-radius: 40px;
+        }
+
+        /* Specialty badge on image */
+        .coach-specialty-img {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--accent-primary);
+            background: rgba(10,10,10,0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(245,183,84,0.25);
+            padding: 5px 12px; border-radius: 4px;
+        }
+
+        /* Body */
+        .coach-body {
+            padding: 24px 24px 20px;
+        }
+        .coach-name {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 26px; letter-spacing: 1px;
+            line-height: 1; margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        .coach-role {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 14px;
+        }
+        .coach-bio {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+
+        /* Stats row */
+        .coach-stats {
+            display: flex; gap: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .coach-stat {
+            flex: 1; text-align: center;
+            padding: 12px 8px;
+            border-right: 1px solid var(--border-color);
+            transition: background var(--transition-fast);
+        }
+        .coach-stat:last-child { border-right: none; }
+        .coach-stat:hover { background: rgba(245,183,84,0.05); }
+        .coach-stat-val {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 22px; letter-spacing: 0.5px;
+            color: var(--accent-primary); line-height: 1;
+        }
+        .coach-stat-lbl {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Footer row */
+        .coach-footer {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .coach-socials { display: flex; gap: 8px; }
+        .coach-social {
+            width: 34px; height: 34px;
+            background: rgba(245,183,84,0.06);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: 13px;
+            text-decoration: none;
+            transition: all var(--transition-base);
+        }
+        .coach-social:hover {
+            background: var(--accent-gradient);
+            border-color: transparent;
+            color: var(--primary-bg);
+            transform: translateY(-2px);
+        }
+        .coach-tag {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 40px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+        .coach-card:hover .coach-tag {
+            border-color: rgba(245,183,84,0.3);
+            color: var(--accent-primary);
+            background: rgba(245,183,84,0.06);
+        }
+
+        /* ── FEATURED / HEAD COACH ──────────────────── */
+        .coach-card.featured {
+            border-color: rgba(245,183,84,0.3);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(245,183,84,0.04) 100%);
+        }
+        .coach-card.featured .coach-img-wrap { height: 300px; }
+        .featured-crown {
+            position: absolute; top: 16px; right: 16px;
+            background: var(--accent-gradient);
+            color: var(--primary-bg);
+            font-size: 9px; font-weight: 800;
+            letter-spacing: 2px; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 4px;
+        }
+
+        /* ── VALUES STRIP ───────────────────────────── */
+        .values-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .value-cell {
+            background: var(--card-bg);
+            padding: 36px 28px;
+            text-align: center;
+            transition: background var(--transition-base);
+        }
+        .value-cell:hover { background: var(--secondary-bg); }
+        .value-num {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 48px; letter-spacing: 1px;
+            color: var(--accent-primary);
+            line-height: 1;
+        }
+        .value-label {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ── CTA BANNER ─────────────────────────────── */
+        .cta-banner {
+            background:
+                radial-gradient(ellipse 70% 80% at 15% 50%, rgba(245,183,84,0.1) 0%, transparent 60%),
+                var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 64px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-banner::before {
+            content: 'ELITE';
+            position: absolute;
+            right: -10px; top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Bebas Neue', cursive;
+            font-size: 200px; letter-spacing: -4px;
+            color: rgba(245,183,84,0.04);
+            pointer-events: none; user-select: none;
+            line-height: 1;
+        }
+
+        /* ── RESPONSIVE ─────────────────────────────── */
+        @media (max-width: 991px) {
+            .values-strip { grid-template-columns: repeat(2, 1fr); }
+            .cta-banner { padding: 48px 36px; }
+        }
+        @media (max-width: 640px) {
+            .values-strip { grid-template-columns: repeat(2, 1fr); }
+            .cta-banner { padding: 40px 24px; }
+            .cta-banner::before { font-size: 100px; }
+        }
+    </style>
 </head>
 <body class="bg-black text-white">
 
@@ -31,7 +288,6 @@
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link px-3" href="index.html">Inicio</a></li>
@@ -39,7 +295,7 @@
                     <li class="nav-item"><a class="nav-link px-3 active" href="entrenadores.html">Coaches</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="contacto.html">Contacto</a></li>
                     <li class="nav-item ms-lg-4">
-                        <a class="btn btn-accent btn-pill px-4 py-2" href="contacto.html">
+                        <a class="btn btn-accent btn-pill btn-hover-effect px-4 py-2" href="contacto.html">
                             <span>PRUEBA GRATIS</span>
                             <i class="fas fa-arrow-right ms-2"></i>
                         </a>
@@ -48,102 +304,314 @@
             </div>
         </div>
     </nav>
-<section class="py-5 mt-5">
-        <div class="container py-lg-5">
+
+    <!-- Hero -->
+    <header class="coaches-hero">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="eyebrow" data-aos="fade-down">Staff de Élite — IronForge Studio</span>
+                    <h1 class="section-title display-2 fw-bold mb-4" data-aos="fade-up" data-aos-delay="100">
+                        FORJADORES DE <span class="text-accent glow-text">CAMPEONES</span>
+                    </h1>
+                    <p class="text-white-50 lead mb-0" data-aos="fade-up" data-aos-delay="200" style="max-width:580px; margin: 0 auto;">
+                        Nuestro equipo multidisciplinario combina ciencia del deporte y experiencia real para llevarte a tu máximo nivel físico.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Strip -->
+    <section class="py-5">
+        <div class="container" data-aos="fade-up">
+            <div class="values-strip">
+                <div class="value-cell">
+                    <div class="value-num">6</div>
+                    <div class="value-label">Coaches Certificados</div>
+                </div>
+                <div class="value-cell">
+                    <div class="value-num">+15</div>
+                    <div class="value-label">Años de Experiencia</div>
+                </div>
+                <div class="value-cell">
+                    <div class="value-num">500+</div>
+                    <div class="value-label">Alumnos Formados</div>
+                </div>
+                <div class="value-cell">
+                    <div class="value-num">12</div>
+                    <div class="value-label">Títulos & Récords</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coach Cards -->
+    <section class="py-4 pb-5">
+        <div class="container">
+
             <div class="text-center mb-5" data-aos="fade-up">
-                <span class="badge-modern mb-3"><i class="fas fa-users me-2"></i>Staff de Élite</span>
-                <h2 class="display-4 fw-bold section-title">FORJADORES DE <span class="text-accent glow-text">CAMPEONES</span></h2>
-                <p class="text-white-50 mx-auto" style="max-width: 600px;">Nuestro equipo multidisciplinario combina ciencia y experiencia para llevarte a tu máximo nivel físico.</p>
+                <h2 class="section-title display-5 fw-bold">NUESTRO <span class="text-accent glow-text">EQUIPO</span></h2>
+                <p class="text-white-50 mt-2">Cada coach es un especialista en su área, comprometido con tu progreso.</p>
             </div>
 
             <div class="row g-4 justify-content-center">
+
+                <!-- Marco — Head Coach (featured) -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fe?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
+                    <div class="coach-card featured h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fe?w=600&q=80" alt="Marco The Rock">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">01</span>
+                            <span class="coach-specialty-img"><i class="fas fa-crown me-1"></i> Head Coach</span>
+                            <span class="featured-crown">HEAD COACH</span>
                         </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">MARCO "THE ROCK"</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Head Coach / CrossFit</p>
-                        <p class="text-white-50 small px-3">Especialista en entrenamiento funcional de alta intensidad y preparación para competencias.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1548690312-e3b507d17a12?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
-                        </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">SARA VALENCIA</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Especialista en Nutrición</p>
-                        <p class="text-white-50 small px-3">Magíster en Nutrición Deportiva. Experta en planes de recomposición corporal y suplementación.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
-                        </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">ALEX STEEL</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Powerlifting Coach</p>
-                        <p class="text-white-50 small px-3">Record nacional en levantamiento de potencia. Experto en técnicas de fuerza bruta y biomecánica.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <div class="coach-body">
+                            <h3 class="coach-name">MARCO "THE ROCK"</h3>
+                            <p class="coach-role">CrossFit & Entrenamiento Funcional</p>
+                            <p class="coach-bio">Especialista en entrenamiento funcional de alta intensidad y preparación para competencias nacionales.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">10</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">CF L3</div>
+                                    <div class="coach-stat-lbl">Cert.</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">200+</div>
+                                    <div class="coach-stat-lbl">Alumnos</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="coach-social" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                                <span class="coach-tag">Cross WOD</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Sara -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="80">
+                    <div class="coach-card h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1548690312-e3b507d17a12?w=600&q=80" alt="Sara Valencia">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">02</span>
+                            <span class="coach-specialty-img"><i class="fas fa-apple-alt me-1"></i> Nutrición</span>
+                        </div>
+                        <div class="coach-body">
+                            <h3 class="coach-name">SARA VALENCIA</h3>
+                            <p class="coach-role">Especialista en Nutrición Deportiva</p>
+                            <p class="coach-bio">Magíster en Nutrición Deportiva. Experta en planes de recomposición corporal y suplementación estratégica.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">7</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">MSc</div>
+                                    <div class="coach-stat-lbl">Grado</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">150+</div>
+                                    <div class="coach-stat-lbl">Planes</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="coach-social" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                                </div>
+                                <span class="coach-tag">Nutrición</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alex -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="160">
+                    <div class="coach-card h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Alex Steel">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">03</span>
+                            <span class="coach-specialty-img"><i class="fas fa-dumbbell me-1"></i> Powerlifting</span>
+                        </div>
+                        <div class="coach-body">
+                            <h3 class="coach-name">ALEX STEEL</h3>
+                            <p class="coach-role">Powerlifting Coach</p>
+                            <p class="coach-bio">Récord nacional en levantamiento de potencia. Experto en técnica de fuerza bruta y biomecánica avanzada.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">12</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">3</div>
+                                    <div class="coach-stat-lbl">Récords</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">320</div>
+                                    <div class="coach-stat-lbl">KG Total</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="coach-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                </div>
+                                <span class="coach-tag">Powerlifting</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Elena -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
+                    <div class="coach-card h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?w=600&q=80" alt="Elena Mans">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">04</span>
+                            <span class="coach-specialty-img"><i class="fas fa-spa me-1"></i> Yoga</span>
                         </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">ELENA MANS</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Yoga & Mindfulness</p>
-                        <p class="text-white-50 small px-3">Instructora certificada internacionalmente. Especialista en movilidad y control del estrés.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <div class="coach-body">
+                            <h3 class="coach-name">ELENA MANS</h3>
+                            <p class="coach-role">Yoga & Mindfulness</p>
+                            <p class="coach-bio">Instructora certificada internacionalmente. Especialista en movilidad activa y control del estrés bajo carga.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">8</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">RYT</div>
+                                    <div class="coach-stat-lbl">500hr</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">4</div>
+                                    <div class="coach-stat-lbl">Retiros</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="coach-social" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                </div>
+                                <span class="coach-tag">Iron Yoga</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1491756287739-74417c8019b5?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
+                <!-- Daniel -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="80">
+                    <div class="coach-card h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1491756287739-74417c8019b5?w=600&q=80" alt="Dr. Daniel Paz">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">05</span>
+                            <span class="coach-specialty-img"><i class="fas fa-stethoscope me-1"></i> Fisioterapia</span>
                         </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">DR. DANIEL PAZ</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Fisioterapeuta Deportivo</p>
-                        <p class="text-white-50 small px-3">Encargado de la prevención de lesiones y recuperación muscular post-entrenamiento de alto impacto.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <div class="coach-body">
+                            <h3 class="coach-name">DR. DANIEL PAZ</h3>
+                            <p class="coach-role">Fisioterapeuta Deportivo</p>
+                            <p class="coach-bio">Encargado de la prevención de lesiones y recuperación muscular post-entrenamiento de alto impacto.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">9</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">PhD</div>
+                                    <div class="coach-stat-lbl">Título</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">0</div>
+                                    <div class="coach-stat-lbl">Lesiones</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                </div>
+                                <span class="coach-tag">Recuperación</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card text-center h-100">
-                        <div class="mb-4 d-inline-block position-relative">
-                            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400" class="rounded-circle shadow-glow" style="width: 180px; height: 180px; object-fit: cover; border: 3px solid var(--accent-primary);">
+                <!-- Carlos -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="160">
+                    <div class="coach-card h-100">
+                        <div class="coach-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=600&q=80" alt="Carlos Box">
+                            <div class="coach-img-overlay"></div>
+                            <span class="coach-number">06</span>
+                            <span class="coach-specialty-img"><i class="fas fa-fist-raised me-1"></i> Boxeo</span>
                         </div>
-                        <h3 class="fw-bold" style="font-family: 'Bebas Neue';">CARLOS BOX</h3>
-                        <p class="text-accent fw-bold small text-uppercase">Boxeo / Striking</p>
-                        <p class="text-white-50 small px-3">Ex-peleador profesional con 10 años de experiencia enseñando técnica pura y cardio-box.</p>
-                        <div class="social-links justify-content-center mt-3">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <div class="coach-body">
+                            <h3 class="coach-name">CARLOS BOX</h3>
+                            <p class="coach-role">Boxeo & Striking</p>
+                            <p class="coach-bio">Ex-peleador profesional con 10 años de experiencia enseñando técnica pura y cardio-box de alto nivel.</p>
+                            <div class="coach-stats">
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">10</div>
+                                    <div class="coach-stat-lbl">Años</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">18</div>
+                                    <div class="coach-stat-lbl">Victorias</div>
+                                </div>
+                                <div class="coach-stat">
+                                    <div class="coach-stat-val">Pro</div>
+                                    <div class="coach-stat-lbl">Nivel</div>
+                                </div>
+                            </div>
+                            <div class="coach-footer">
+                                <div class="coach-socials">
+                                    <a href="#" class="coach-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="coach-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                                </div>
+                                <span class="coach-tag">Shadow Boxing</span>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="py-5 bg-dark-custom">
+        <div class="container py-lg-3">
+            <div class="cta-banner" data-aos="fade-up">
+                <div class="row align-items-center gy-4">
+                    <div class="col-lg-7">
+                        <span class="badge-modern mb-3 d-inline-block">¿Listo para empezar?</span>
+                        <h2 class="section-title display-4 fw-bold mb-3">
+                            ENTRENA CON<br><span class="text-accent glow-text">LOS MEJORES</span>
+                        </h2>
+                        <p class="text-white-50 mb-0" style="max-width: 480px;">
+                            Tu primera sesión es completamente gratis. Conoce a tu coach, evalúa tu nivel y recibe un plan personalizado.
+                        </p>
+                    </div>
+                    <div class="col-lg-5 text-lg-end">
+                        <a href="contacto.html" class="btn btn-accent btn-pill btn-hover-effect px-5 py-3 fs-6 me-2">
+                            <span>RESERVAR SESIÓN</span>
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="clases.html" class="btn btn-outline-accent btn-pill px-4 py-3 fs-6 mt-2 mt-sm-0">
+                            Ver Clases
+                        </a>
                     </div>
                 </div>
             </div>
@@ -155,53 +623,69 @@
         <div class="container">
             <div class="row g-4 border-bottom border-secondary pb-5">
                 <div class="col-lg-4">
-                    <h3 class="fw-bold mb-4 brand-logo">
-                        IRON<span class="text-accent">FORGE</span>
-                    </h3>
-                    <p class="text-white-50 small mb-4">
-                        Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.
-                    </p>
+                    <h3 class="fw-bold mb-4 brand-logo">IRON<span class="text-accent">FORGE</span></h3>
+                    <p class="text-white-50 small mb-4">Llevamos el entrenamiento al siguiente nivel. Sé parte de la comunidad fitness más exclusiva de Lima.</p>
                     <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 ms-auto">
-                    <h6 class="fw-bold mb-4 text-accent">Navegación</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Navegación</h6>
                     <ul class="list-unstyled small footer-links">
+                        <li><a href="index.html">Inicio</a></li>
                         <li><a href="clases.html">Clases</a></li>
                         <li><a href="entrenadores.html">Coaches</a></li>
                         <li><a href="contacto.html">Unirme</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3">
-                    <h6 class="fw-bold mb-4 text-accent">Contacto</h6>
+                    <h6 class="fw-bold mb-4 text-accent" style="letter-spacing:2px; font-size:11px; text-transform:uppercase;">Contacto</h6>
                     <ul class="list-unstyled small text-white-50">
                         <li class="mb-2"><i class="fas fa-map-marker-alt text-accent me-2"></i> Lima, Perú</li>
                         <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +51 999 888 777</li>
                         <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> info@ironforge.pe</li>
+                        <li class="mb-2"><i class="fas fa-clock text-accent me-2"></i> Lun–Vie: 5am – 10pm</li>
                     </ul>
                 </div>
             </div>
             <div class="pt-4 text-center">
                 <p class="small text-white-50 mb-0">
-                    &copy; 2026 IronForge Studio | <strong class="text-accent">Diseñado por Jean Avalos</strong>
+                    &copy; 2026 IronForge Studio &nbsp;|&nbsp; <strong class="text-accent">Diseñado por Jean Avalos</strong>
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" class="scroll-top-btn">
+    <!-- Scroll to Top -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="main.js"></script>
-</body>
+    <script>
+        AOS.init({ duration: 700, once: true, offset: 60 });
 
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const pre = document.getElementById('preloader');
+                if (pre) pre.classList.add('hidden');
+            }, 600);
+        });
+
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        const btn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+</body>
 </html>
